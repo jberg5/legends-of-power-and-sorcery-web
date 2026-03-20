@@ -87,12 +87,11 @@ config = {
     fb_height : "720"
 }
 
-// Detect mobile and adjust framebuffer to match device
+// Detect mobile and adjust framebuffer to match CSS pixel dimensions
 var isMobile = window.innerWidth < 900;
 if (isMobile) {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    config.fb_width = String(Math.min(Math.round(window.innerWidth * dpr), 1920));
-    config.fb_height = String(Math.min(Math.round(window.innerHeight * dpr), 1080));
+    config.fb_width = String(window.innerWidth);
+    config.fb_height = String(window.innerHeight);
     config.fb_ar = window.innerWidth / window.innerHeight;
 }
 
