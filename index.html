@@ -94,6 +94,15 @@ config = {
     fb_height : "720"
 }
 
+// Detect mobile and adjust framebuffer to match device
+var isMobile = window.innerWidth < 900;
+if (isMobile) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    config.fb_width = String(Math.min(Math.round(window.innerWidth * dpr), 1920));
+    config.fb_height = String(Math.min(Math.round(window.innerHeight * dpr), 1080));
+    config.fb_ar = window.innerWidth / window.innerHeight;
+}
+
 function show_infobox() {
     infobox.style.display = "flex";
 }
@@ -155,6 +164,33 @@ function show_infobox() {
         }
 
         #pyconsole, #crt, #system, #box, #dlg, #html { display: none !important; }
+
+        /* Prevent mobile bounce/scroll */
+        html, body { touch-action: none; overflow: hidden; position: fixed; width: 100%; height: 100%; }
+
+        /* Suggest landscape on portrait phones */
+        @media (max-width: 600px) and (orientation: portrait) {
+            #rotate-prompt {
+                display: flex !important;
+            }
+            #canvas { display: none; }
+        }
+
+        #rotate-prompt {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #0a0810;
+            color: #c8a040;
+            font-size: 22px;
+            font-weight: bold;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 999998;
+            padding: 40px;
+            line-height: 1.6;
+        }
     </style>
 
     <script src="https://pygame-web.github.io/cdn/0.9.3//browserfs.min.js"></script>
@@ -171,14 +207,22 @@ function show_infobox() {
     </div>
 
     <canvas class="emscripten" id="canvas"
-        width="1280px" height="720px"
         oncontextmenu="event.preventDefault()" tabindex=1>
     </canvas>
 
     <canvas class="emscripten" id="canvas3d"
-        width="1280px" height="720px"
         oncontextmenu="event.preventDefault()" tabindex=1 hidden>
     </canvas>
+
+    <script>
+    // Set canvas dimensions from config (may have been adjusted for mobile)
+    document.getElementById("canvas").width = config.fb_width;
+    document.getElementById("canvas").height = config.fb_height;
+    document.getElementById("canvas3d").width = config.fb_width;
+    document.getElementById("canvas3d").height = config.fb_height;
+    </script>
+
+    <div id="rotate-prompt">Please rotate your device to landscape mode</div>
 
     <div id="infobox">Loading...</div>
 
