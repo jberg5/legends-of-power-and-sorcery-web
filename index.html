@@ -40,13 +40,6 @@ async def custom_site():
 
     main = appdir / "assets" / "main.py"
 
-    if not platform.window.MM.UME:
-        __import__(__name__).__file__ = main
-        msg = "Click to Start"
-        platform.window.infobox.innerText = msg
-        while not platform.window.MM.UME:
-            await asyncio.sleep(.1)
-
     await TopLevel_async_handler.start_toplevel(platform.shell, console=False)
     __import__(__name__).__file__ = main
 
@@ -82,7 +75,7 @@ config = {
     user_canvas : 0,
     user_canvas_managed : 0,
     gui_divider : 1,
-    ume_block : 1,
+    ume_block : 0,
     can_close : 0,
     archive : "legends-of-power-and-sorcery",
     gui_debug : 0,
